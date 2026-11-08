@@ -3,3 +3,7 @@ export type DigitValidator = (char: string) => boolean;
 export type CreateDigitValidator = (base: GameBase) => DigitValidator;
 
 export type IsValidGuess = (guess: string, length: number, base: GameBase) => boolean;
+
+export type RandomSource = () => number;
+
+export type GenerateSecret = (length: number, base: GameBase, random?: RandomSource) => string;
