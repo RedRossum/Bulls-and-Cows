@@ -1,5 +1,6 @@
 import type { GameState, GameBase, HistoryEntry } from '../types';
 import { generateSecret } from './generateSecret';
+import { loadRecordsFromStorage } from './records';
 
 export const createInitialState = (): GameState => ({
   status: 'setup',
@@ -8,7 +9,7 @@ export const createInitialState = (): GameState => ({
   secret: '',
   history: [],
   startTime: null,
-  records: [],
+  records: loadRecordsFromStorage(),
 });
 
 export const updateSettings = (state: GameState, length: number, base: GameBase): GameState => ({
