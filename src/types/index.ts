@@ -7,3 +7,10 @@ export type IsValidGuess = (guess: string, length: number, base: GameBase) => bo
 export type RandomSource = () => number;
 
 export type GenerateSecret = (length: number, base: GameBase, random?: RandomSource) => string;
+
+export type GuessScore = {
+  bulls: number;
+  cows: number;
+};
+
+export type EvaluateGuess = (secret: string, guess: string) => GuessScore;
