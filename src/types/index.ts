@@ -14,3 +14,5 @@ export type GuessScore = {
 };
 
 export type EvaluateGuess = (secret: string, guess: string) => GuessScore;
+
+export type CountPossibleSecrets = (length: number, base: GameBase) => number;
