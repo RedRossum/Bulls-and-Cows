@@ -2,7 +2,7 @@ import type { GameState } from '../types';
 import { createDigitValidator } from '../core/createDigitValidator';
 import { isValidGuess } from '../core/isValidGuess';
 import { evaluateGuess } from '../core/evaluateGuess';
-import { addGuessResult } from '../core/gameState';
+import { addGuessResult, createInitialState } from '../core/gameState';
 
 export const renderPlayingScreen = (
   state: GameState,
@@ -65,6 +65,19 @@ export const renderPlayingScreen = (
   inputGroup.appendChild(submitButton);
   container.appendChild(inputGroup);
   container.appendChild(errorText);
+
+  const abortButton = document.createElement('button');
+  abortButton.textContent = '🏳️ Сдаться / К настройкам';
+  abortButton.className = 'btn-abort';
+  abortButton.style.marginTop = '10px';
+  abortButton.style.display = 'block';
+
+  abortButton.addEventListener('click', () => {
+    const resetState = createInitialState();
+    resetState.records = state.records;
+    onStateChange(resetState);
+  });
+  container.appendChild(abortButton);
 
   if (state.history.length > 0) {
     const historyTitle = document.createElement('h3');
