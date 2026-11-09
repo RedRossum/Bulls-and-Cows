@@ -1,6 +1,7 @@
 import type { GameState } from './types';
 import { createInitialState } from './core/gameState';
 import { renderSetupScreen } from './components/setupScreen';
+import { renderPlayingScreen } from './components/playingScreen';
 
 const renderApp = (state: GameState): void => {
   const body = document.body;
@@ -10,14 +11,34 @@ const renderApp = (state: GameState): void => {
   }
 
   if (state.status === 'setup') {
-    const setupView = renderSetupScreen(state, handleStateChange);
-    body.appendChild(setupView);
+    body.appendChild(renderSetupScreen(state, handleStateChange));
   } else if (state.status === 'playing') {
-    const playingPlaceholder = document.createElement('div');
-    const text = document.createElement('h2');
-    text.textContent = `🎮 Игра началась! Компьютер загадал секрет: ${state.secret}`;
-    playingPlaceholder.appendChild(text);
-    body.appendChild(playingPlaceholder);
+    body.appendChild(renderPlayingScreen(state, handleStateChange));
+  } else if (state.status === 'won') {
+    const wonContainer = document.createElement('div');
+    wonContainer.className = 'won-screen';
+
+    const winTitle = document.createElement('h1');
+    winTitle.textContent = '🎉 Победа! Вы угадали число!';
+    wonContainer.appendChild(winTitle);
+
+    const secretText = document.createElement('p');
+    secretText.textContent = `Тайное число было: ${state.secret.toUpperCase()}`;
+    wonContainer.appendChild(secretText);
+
+    const statsText = document.createElement('p');
+    const timeSpent = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+    statsText.textContent = `📊 Сделано попыток: ${state.history.length}, Затрачено времени: ${timeSpent} сек.`;
+    wonContainer.appendChild(statsText);
+
+    const restartButton = document.createElement('button');
+    restartButton.textContent = '⚙️ К настройкам / Новая игра';
+    restartButton.addEventListener('click', () => {
+      handleStateChange(createInitialState());
+    });
+
+    wonContainer.appendChild(restartButton);
+    body.appendChild(wonContainer);
   }
 };
 
