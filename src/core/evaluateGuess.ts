@@ -1,9 +1,19 @@
 import type { EvaluateGuess } from '../types';
 
 export const evaluateGuess: EvaluateGuess = (secret, guess) => {
-  if (!secret || !guess) {
-    return { bulls: 0, cows: 0 };
-  }
+  const secretLower = secret.toLowerCase();
+  const guessLower = guess.toLowerCase();
 
-  return { bulls: 0, cows: 0 };
+  const guessChars = guessLower.split('');
+
+  const bulls = guessChars.filter((char, index) => char === secretLower[index]).length;
+
+  const cows = guessChars.filter((char, index) => {
+    const isPresentInSecret = secretLower.includes(char);
+    const isNotAtSameIndex = char !== secretLower[index];
+
+    return isPresentInSecret && isNotAtSameIndex;
+  }).length;
+
+  return { bulls, cows };
 };
