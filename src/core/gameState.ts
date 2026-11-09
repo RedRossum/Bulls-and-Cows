@@ -1,4 +1,5 @@
-import type { GameState } from '../types';
+import type { GameState, GameBase, HistoryEntry } from '../types';
+import { generateSecret } from './generateSecret';
 
 export const createInitialState = (): GameState => ({
   status: 'setup',
@@ -10,16 +11,26 @@ export const createInitialState = (): GameState => ({
   records: [],
 });
 
-export const updateSettings = (state: GameState, length: number, base: GameBase): GameState => {
-  if (length || base) return state;
-  return state;
-};
+export const updateSettings = (state: GameState, length: number, base: GameBase): GameState => ({
+  ...state,
+  length,
+  base,
+});
 
-export const startRound = (state: GameState): GameState => {
-  return state;
-};
+export const startRound = (state: GameState): GameState => ({
+  ...state,
+  status: 'playing',
+  secret: generateSecret(state.length, state.base),
+  history: [],
+  startTime: Date.now(),
+});
 
 export const addGuessResult = (state: GameState, entry: HistoryEntry): GameState => {
-  if (entry) return state;
-  return state;
+  const isWon = entry.bulls === state.length;
+
+  return {
+    ...state,
+    status: isWon ? 'won' : state.status,
+    history: [...state.history, entry],
+  };
 };
